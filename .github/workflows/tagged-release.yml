@@ -1,0 +1,45 @@
+name: 'tagged-release'
+
+on:
+    push:
+        tags:
+            - 'v*'
+
+permissions:
+    contents: write
+
+jobs:
+    tagged-release:
+        name: 'Tagged Release'
+        runs-on: 'ubuntu-latest'
+
+        steps:
+            - uses: actions/checkout@v4.1.1
+            - name: Use Node.js
+              uses: actions/setup-node@v4.0.2
+              with:
+                  node-version-file: '.nvmrc'
+            - name: pack and set vars
+              id: vars
+              run: |
+                  tagName="${GITHUB_REF#refs/*/}"
+                  originalTarName="$(npm pack)"
+                  packageNameWithoutFileExtension="${originalTarName%.tgz}"
+                  tagNameWithoutV="${tagName##v}"
+                  packageName="${packageNameWithoutFileExtension%-$tagNameWithoutV}"
+                  newTarName="$packageName-$tagName.tgz"
+                  mv "$originalTarName" "$newTarName"
+                  echo ::set-output name=tarName::"$newTarName"
+
+            - name: 'tagged release'
+              uses: softprops/action-gh-release@v2.0.5
+              with:
+                  make_latest: true
+                  files: ${{ steps.vars.outputs.tarName }}
+
+            - name: 'latest release'
+              uses: softprops/action-gh-release@v2.0.5
+              with:
+                  make_latest: false
+                  files: ${{ steps.vars.outputs.tarName }}
+                  tag_name: latest
