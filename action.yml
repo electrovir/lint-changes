@@ -1,0 +1,18 @@
+name: 'lint-changes'
+description: 'Lint a Pull Request and only throw linting errors that are new.'
+branding:
+    icon: 'filter'
+    color: 'blue'
+inputs:
+    eslintArgs:
+        description: "A single string of space-separated args that will be passed to ESLint's CLI. See https://eslint.org/docs/latest/use/command-line-interface for its docs."
+        required: false
+    pastSetupCommand:
+        description: "A shell command to run in order to setup your past repo for linting. Usually all you need here is the default of 'npm ci'."
+        default: 'npm ci'
+outputs:
+    status:
+        description: 'The result of the checks'
+runs:
+    using: 'node20'
+    main: 'src/action/action-entry-point.js'
