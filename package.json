@@ -1,8 +1,16 @@
 {
     "name": "lint-changes",
-    "version": "0.0.1",
-    "description": "A GitHub action for ESLint that only throws errors that are new.",
-    "keywords": [],
+    "version": "0.0.2",
+    "description": "A CLI, API, and GitHub Action for running ESLint only on changed files.",
+    "keywords": [
+        "api",
+        "changes",
+        "cli",
+        "diff",
+        "eslint",
+        "github action",
+        "lint"
+    ],
     "homepage": "https://github.com/electrovir/lint-changes",
     "bugs": {
         "url": "https://github.com/electrovir/lint-changes/issues"
@@ -19,6 +27,7 @@
     "type": "module",
     "module": "dist/index.js",
     "types": "dist/index.d.ts",
+    "bin": "dist/cli/cli.js",
     "scripts": {
         "build": "virmator frontend build",
         "compile": "virmator compile",
@@ -42,10 +51,12 @@
         "@augment-vir/common": "^28.0.2",
         "@augment-vir/node-js": "^28.0.2",
         "cli-args-vir": "^0.0.2",
+        "eslint": "^9.3.0",
         "object-shape-tester": "^2.3.2",
         "run-time-assertions": "^1.5.1",
         "simple-git": "^3.24.0",
-        "tsx": "^4.10.5"
+        "tsx": "^4.10.5",
+        "virmator": "^11.5.2"
     },
     "devDependencies": {
         "@augment-vir/chai": "^28.0.2",
@@ -61,7 +72,6 @@
         "cspell": "^8.8.1",
         "dependency-cruiser": "^16.3.2",
         "esbuild": "^0.21.3",
-        "eslint": "^9.3.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-prettier": "^5.1.3",
         "eslint-plugin-sonarjs": "^1.0.3",
@@ -82,11 +92,7 @@
         "ts-node": "^10.9.2",
         "typedoc": "^0.25.13",
         "typescript": "^5.3.3",
-        "typescript-eslint": "^8.0.0-alpha.14",
-        "virmator": "^11.5.2"
-    },
-    "peerDependencies": {
-        "eslint": "*"
+        "typescript-eslint": "^8.0.0-alpha.14"
     },
     "overrides": {
         "eslint": "^9.3.0"

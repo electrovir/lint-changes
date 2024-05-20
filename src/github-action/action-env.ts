@@ -12,7 +12,7 @@ export function extractActionEnv(): {
     if (!repoDir || !existsSync(repoDir)) {
         throw new Error(`Invalid repo dir: '${String(repoDir)}'`);
     }
-    const baseRef =
+    const baseBranch =
         (githubContext.payload.pull_request?.base as {ref: string} | undefined)?.ref || '';
 
     const pastSetupCommand: string = getInput('token', {trimWhitespace: true}) || 'npm ci';
@@ -22,6 +22,6 @@ export function extractActionEnv(): {
         repoDir,
         pastSetupCommand,
         eslintArgString,
-        baseRef,
+        baseRef: baseBranch ? `origin/${baseBranch}` : baseBranch,
     };
 }

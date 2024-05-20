@@ -15,4 +15,4 @@ outputs:
         description: 'The result of the checks'
 runs:
     using: 'node20'
-    main: 'src/action/action-entry-point.js'
+    main: 'src/github-action/action-entry-point.js'
