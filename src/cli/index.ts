@@ -1,2 +1,2 @@
-export * from './parse-cli-args';
-export * from './run-cli';
+export * from './parse-cli-args.js';
+export * from './run-cli.js';

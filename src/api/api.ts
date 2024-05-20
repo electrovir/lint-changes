@@ -2,13 +2,13 @@ import {wait} from '@augment-vir/common';
 import {log, logColors, logIf} from '@augment-vir/node-js';
 import {ESLint} from 'eslint';
 import simpleGit from 'simple-git';
-import {filterLintResults} from '../eslint/filter-lint-results';
-import {lintFiles} from '../eslint/lint-files';
-import {listChangedFiles} from '../git/changes';
-import {findBaseRef} from '../git/find-base-ref';
-import {listCommits} from '../git/list-commits';
-import {ApiArgs, apiArgsShape} from './api-args';
-import {setupForPastLinting} from './setup-past-linting';
+import {filterLintResults} from '../eslint/filter-lint-results.js';
+import {lintFiles} from '../eslint/lint-files.js';
+import {listChangedFiles} from '../git/changes.js';
+import {findBaseRef} from '../git/find-base-ref.js';
+import {listCommits} from '../git/list-commits.js';
+import {ApiArgs, apiArgsShape} from './api-args.js';
+import {setupForPastLinting} from './setup-past-linting.js';
 
 /**
  * This is the main entry point to this package's API. Based on the given arguments, this detects

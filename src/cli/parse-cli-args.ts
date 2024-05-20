@@ -2,7 +2,7 @@ import {copyThroughJson, hasKey, removePrefix, typedSplit} from '@augment-vir/co
 import {extractRelevantArgs} from 'cli-args-vir';
 import {assertValidShape} from 'object-shape-tester';
 import {assertRunTimeType, getRunTimeType} from 'run-time-assertions';
-import {ApiArgs, apiArgsShape} from '../api/api-args';
+import {ApiArgs, apiArgsShape} from '../api/api-args.js';
 
 /**
  * Parse a raw array of CLi args into the internally expected arguments object.

@@ -1,7 +1,7 @@
 import {log} from '@augment-vir/node-js';
-import {lintChanges} from '../api/api';
-import {ApiArgs} from '../api/api-args';
-import {formatLintResults} from '../api/format-results';
+import {ApiArgs} from '../api/api-args.js';
+import {lintChanges} from '../api/api.js';
+import {formatLintResults} from '../api/format-results.js';
 
 /**
  * Runs the CLI.

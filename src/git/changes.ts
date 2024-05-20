@@ -8,7 +8,7 @@ import {
 import {join} from 'node:path';
 import {assertDefined} from 'run-time-assertions';
 import {SimpleGit} from 'simple-git';
-import {getCurrentGitRepoPath} from './repo-path';
+import {getCurrentGitRepoPath} from './repo-path.js';
 
 /**
  * File paths for a file that has been modified in some way since the base ref.

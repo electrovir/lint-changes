@@ -1,7 +1,7 @@
 import {itCases} from '@augment-vir/chai';
 import {describe} from 'mocha';
-import {apiArgsShape} from '../api/api-args';
-import {parseCliArgs} from './parse-cli-args';
+import {apiArgsShape} from '../api/api-args.js';
+import {parseCliArgs} from './parse-cli-args.js';
 
 describe(parseCliArgs.name, () => {
     itCases(parseCliArgs, [

@@ -1,8 +1,8 @@
 import {itCases} from '@augment-vir/chai';
 import {describe} from 'mocha';
-import {testBranchNames} from '../repo-git-refs.mock';
-import {wrapInGit} from './git.mock';
-import {listCommits} from './list-commits';
+import {testBranchNames} from '../repo-git-refs.mock.js';
+import {wrapInGit} from './git.mock.js';
+import {listCommits} from './list-commits.js';
 
 describe(listCommits.name, () => {
     itCases(wrapInGit(listCommits), [

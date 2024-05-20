@@ -2,10 +2,10 @@ import {itCases} from '@augment-vir/chai';
 import {mapObjectValues} from '@augment-vir/common';
 import {describe} from 'mocha';
 import {relative} from 'node:path';
-import {testBranchNames, testCommits} from '../repo-git-refs.mock';
-import {packageRootDir} from '../repo-paths.mock';
-import {listChangedFiles} from './changes';
-import {callWithGit} from './git.mock';
+import {testBranchNames, testCommits} from '../repo-git-refs.mock.js';
+import {packageRootDir} from '../repo-paths.mock.js';
+import {listChangedFiles} from './changes.js';
+import {callWithGit} from './git.mock.js';
 
 describe(listChangedFiles.name, () => {
     async function testListChangedFiles({ref, relativeTo}: {ref: string; relativeTo: string}) {

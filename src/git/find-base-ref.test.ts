@@ -1,8 +1,8 @@
 import {itCases} from '@augment-vir/chai';
 import {describe} from 'mocha';
-import {testBranchNames, testCommits} from '../repo-git-refs.mock';
-import {findBaseRef} from './find-base-ref';
-import {wrapInGit} from './git.mock';
+import {testBranchNames, testCommits} from '../repo-git-refs.mock.js';
+import {findBaseRef} from './find-base-ref.js';
+import {wrapInGit} from './git.mock.js';
 
 describe(findBaseRef.name, () => {
     itCases(wrapInGit(findBaseRef), [

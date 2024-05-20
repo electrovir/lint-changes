@@ -1,2 +1,2 @@
-export * from './filter-lint-results';
-export * from './lint-files';
+export * from './filter-lint-results.js';
+export * from './lint-files.js';

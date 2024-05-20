@@ -1,6 +1,6 @@
 import {RemoveFirstTupleEntry, TypedFunction} from '@augment-vir/common';
 import simpleGit, {SimpleGit} from 'simple-git';
-import {packageRootDir} from '../repo-paths.mock';
+import {packageRootDir} from '../repo-paths.mock.js';
 
 export type GitFunction = TypedFunction<[SimpleGit, ...any[]], any>;
 

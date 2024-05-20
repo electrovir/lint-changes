@@ -1,6 +1,6 @@
 import {collapseWhiteSpace, isLengthAtLeast} from '@augment-vir/common';
 import {SimpleGit} from 'simple-git';
-import {getBranchesContainingRef} from './containing-branches';
+import {getBranchesContainingRef} from './containing-branches.js';
 
 const madRefDistance = 100;
 

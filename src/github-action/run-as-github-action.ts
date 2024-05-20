@@ -1,6 +1,6 @@
 import {wait} from '@augment-vir/common';
-import {runCli} from '../cli/run-cli';
-import {extractActionEnv} from './action-env';
+import {runCli} from '../cli/run-cli.js';
+import {extractActionEnv} from './action-env.js';
 
 async function runGithubAction() {
     /**

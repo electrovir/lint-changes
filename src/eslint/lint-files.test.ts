@@ -1,8 +1,8 @@
 import {itCases} from '@augment-vir/chai';
 import {describe} from 'mocha';
 import {relative} from 'node:path';
-import {packageRootDir, testPaths} from '../repo-paths.mock';
-import {lintFiles} from './lint-files';
+import {packageRootDir, testPaths} from '../repo-paths.mock.js';
+import {lintFiles} from './lint-files.js';
 
 describe(lintFiles.name, () => {
     async function testLintFiles(args: Omit<Parameters<typeof lintFiles>[0], 'cwd'>) {
@@ -164,8 +164,8 @@ describe(lintFiles.name, () => {
                                     desc: 'Add void operator to ignore.',
                                     fix: {
                                         range: [
-                                            65,
-                                            65,
+                                            68,
+                                            68,
                                         ],
                                         text: 'void ',
                                     },
@@ -174,7 +174,7 @@ describe(lintFiles.name, () => {
                             ],
                         },
                     ],
-                    source: "import {doThing} from './bad-lint-1';\n\nfunction doThing2() {\n    doThing();\n}\n",
+                    source: "import {doThing} from './bad-lint-1.js';\n\nfunction doThing2() {\n    doThing();\n}\n",
                     suppressedMessages: [],
                     usedDeprecatedRules: [],
                     warningCount: 0,
