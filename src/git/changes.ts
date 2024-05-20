@@ -75,7 +75,7 @@ function parseDiffLine({
     const status = columns[0][0]?.toLowerCase();
 
     if (!isEnumValue(status, NameStatus)) {
-        throw new Error(`Unexpected git name status '${status}' on line '${line}'.`);
+        throw new Error(`Unexpected git name status '${String(status)}' on line '${line}'.`);
     }
 
     if (status === NameStatus.Renamed) {
@@ -85,10 +85,18 @@ function parseDiffLine({
             latestFilePath: join(gitRepoPath, columns[2]),
             previousFilePath: join(gitRepoPath, columns[1]),
         };
-    } else {
+    } else if (
+        [
+            NameStatus.Added,
+            NameStatus.Copied,
+            NameStatus.Modified,
+        ].includes(status)
+    ) {
         return {
             latestFilePath: join(gitRepoPath, columns[1]),
         };
+    } else {
+        return undefined;
     }
 }
 
@@ -102,6 +110,7 @@ enum NameStatus {
     Deleted = 'd',
     Modified = 'm',
     Renamed = 'r',
+
     TypeChanged = 't',
     TypeUnmerged = 'u',
     TypeUnknown = 'x',

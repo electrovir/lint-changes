@@ -25,9 +25,6 @@ describe(listChangedFiles.name, () => {
             },
             expect: [
                 {
-                    latestFilePath: 'test-file-to-delete',
-                },
-                {
                     latestFilePath: 'test-file-to-edit',
                 },
                 {
