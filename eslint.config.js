@@ -36,6 +36,12 @@ export default [
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-unsafe-assignment': 'off',
             '@typescript-eslint/await-thenable': 'error',
+            '@typescript-eslint/restrict-template-expressions': [
+                'error',
+                {
+                    allowNumber: true,
+                },
+            ],
             '@stylistic/padding-line-between-statements': [
                 'error',
                 /** Require new lines between imports and everything else. */

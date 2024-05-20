@@ -25,11 +25,12 @@ describe(listChangedFiles.name, () => {
             },
             expect: [
                 {
-                    latestFilePath: 'test-file-to-edit',
+                    presentFilePath: 'test-file-to-edit',
+                    pastFilePath: 'test-file-to-edit',
                 },
                 {
-                    latestFilePath: 'test-file-to-rename-2',
-                    previousFilePath: 'test-file-to-rename',
+                    presentFilePath: 'test-file-to-rename-2',
+                    pastFilePath: 'test-file-to-rename',
                 },
             ],
         },

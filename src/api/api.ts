@@ -1,4 +1,4 @@
-import {wait} from '@augment-vir/common';
+import {filterMap, isTruthy, wait} from '@augment-vir/common';
 import {log, logColors, logIf} from '@augment-vir/node-js';
 import {ESLint} from 'eslint';
 import simpleGit from 'simple-git';
@@ -52,24 +52,37 @@ export async function lintChanges(
     const changedFiles = await listChangedFiles(git, {ref: gitRef, relativeTo: fullArgs.baseRef});
 
     if (fullArgs.checkoutBaseRef) {
-        const presentResults = await lintFiles({
-            eslintArgString,
-            filePaths: changedFiles.map((changedFile) => changedFile.latestFilePath),
-            cwd,
-        });
-        await setupForPastLinting(git, {
-            pastRef: fullArgs.baseRef,
-            pastSetupCommand: fullArgs.pastSetupCommand,
-            cwd,
-        });
-        const pastResults = await lintFiles({
-            eslintArgString,
-            filePaths: changedFiles.map(
-                (changedFile) => changedFile.previousFilePath || changedFile.latestFilePath,
-            ),
-            cwd,
-        });
-        return filterLintResults({past: pastResults, present: presentResults});
+        try {
+            const presentResults = await lintFiles({
+                eslintArgString,
+                filePaths: changedFiles.map((changedFile) => changedFile.presentFilePath),
+                cwd,
+                silent: fullArgs.silent,
+            });
+            await setupForPastLinting(git, {
+                pastRef: fullArgs.baseRef,
+                pastSetupCommand: fullArgs.pastSetupCommand,
+                cwd,
+                silent: fullArgs.silent,
+            });
+            const pastResults = await lintFiles({
+                eslintArgString,
+                filePaths: filterMap(
+                    changedFiles,
+                    (changedFile) => changedFile.pastFilePath,
+                    isTruthy,
+                ),
+                silent: fullArgs.silent,
+                cwd,
+            });
+
+            return filterLintResults({past: pastResults, present: presentResults}, changedFiles);
+        } finally {
+            await git.raw([
+                'checkout',
+                '-',
+            ]);
+        }
     } else {
         /** Only lint the latest files. Do not compare them with past files. */
 
@@ -77,7 +90,8 @@ export async function lintChanges(
 
         return await lintFiles({
             eslintArgString,
-            filePaths: changedFiles.map((changedFile) => changedFile.latestFilePath),
+            filePaths: changedFiles.map((changedFile) => changedFile.presentFilePath),
+            silent: fullArgs.silent,
             cwd,
         });
     }

@@ -16,8 +16,8 @@ import {getCurrentGitRepoPath} from './repo-path.js';
  * @category Internal
  */
 export type ChangedFile = {
-    latestFilePath: string;
-    previousFilePath?: string | undefined;
+    presentFilePath: string;
+    pastFilePath: string | undefined;
 };
 
 /**
@@ -82,18 +82,24 @@ function parseDiffLine({
         assertDefined(columns[2], `Failed to find new file name in line '${line}'`);
 
         return {
-            latestFilePath: join(gitRepoPath, columns[2]),
-            previousFilePath: join(gitRepoPath, columns[1]),
+            presentFilePath: join(gitRepoPath, columns[2]),
+            pastFilePath: join(gitRepoPath, columns[1]),
+        };
+    } else if (status === NameStatus.Modified) {
+        return {
+            presentFilePath: join(gitRepoPath, columns[1]),
+            pastFilePath: join(gitRepoPath, columns[1]),
         };
     } else if (
         [
             NameStatus.Added,
             NameStatus.Copied,
-            NameStatus.Modified,
         ].includes(status)
     ) {
         return {
-            latestFilePath: join(gitRepoPath, columns[1]),
+            presentFilePath: join(gitRepoPath, columns[1]),
+            /** If a file as added or copied, there is no past file to lint. */
+            pastFilePath: undefined,
         };
     } else {
         return undefined;

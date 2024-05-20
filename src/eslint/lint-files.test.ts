@@ -25,6 +25,7 @@ describe(lintFiles.name, () => {
             input: {
                 filePaths: [testPaths.badFile],
                 eslintArgString: '',
+                silent: false,
             },
             expect: [
                 {
@@ -69,6 +70,7 @@ describe(lintFiles.name, () => {
             input: {
                 filePaths: [testPaths.goodFile],
                 eslintArgString: '',
+                silent: false,
             },
             expect: [
                 {
@@ -92,6 +94,7 @@ describe(lintFiles.name, () => {
                     testPaths.goodFile,
                 ],
                 eslintArgString: '',
+                silent: false,
             },
             expect: [
                 {

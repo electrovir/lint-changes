@@ -7,6 +7,7 @@ import {
 } from '@augment-vir/common';
 import type {ESLint, Linter} from 'eslint';
 import {assertDefined} from 'run-time-assertions';
+import {ChangedFile} from '../git/changes';
 
 /**
  * An object with both past and present results of arbitrary type `T`.
@@ -24,40 +25,46 @@ export type TimeComparison<T> = {
  * @category Internal
  */
 export function filterLintResults(
-    originalResults: TimeComparison<ReadonlyArray<Readonly<ESLint.LintResult>>>,
+    originalResults: Readonly<TimeComparison<ReadonlyArray<Readonly<ESLint.LintResult>>>>,
+    changedFiles: ReadonlyArray<Readonly<ChangedFile>>,
 ): ESLint.LintResult[] {
     const byFile = mapObjectValues(originalResults, (key, lintResults) =>
         groupResultsByFile(lintResults),
     );
 
-    const filtered: {[FilePath in string]: ESLint.LintResult} = mapObjectValues(
-        byFile.present,
-        (filePath, presentResults): ESLint.LintResult => {
-            const assertionFailureMessage = `Somehow there are no present lint results for '${filePath}'`;
-            assertDefined(presentResults, assertionFailureMessage);
-            assertLengthAtLeast(presentResults, 1, assertionFailureMessage);
-            if (presentResults.length > 1) {
-                throw new Error(
-                    `Somehow there are multiple present lint results for '${filePath}'`,
-                );
-            }
+    const filtered: ESLint.LintResult[] = changedFiles.map((changedFile): ESLint.LintResult => {
+        const presentLintResults = byFile.present[changedFile.presentFilePath];
+        const pastLintResults = changedFile.pastFilePath
+            ? byFile.past[changedFile.pastFilePath]
+            : undefined;
 
-            const pastResults = byFile.past[filePath];
+        const assertionFailureMessage = `Somehow there are no present lint results for '${changedFile.presentFilePath}'`;
+        assertDefined(presentLintResults, assertionFailureMessage);
+        assertLengthAtLeast(presentLintResults, 1, assertionFailureMessage);
+        if (presentLintResults.length > 1) {
+            throw new Error(
+                `Somehow there are multiple present lint results for '${changedFile.presentFilePath}'`,
+            );
+        }
 
-            /** No need to filter results if there are no past results. */
-            if (!pastResults || !isLengthAtLeast(pastResults, 1)) {
-                return presentResults[0];
-            }
+        /** No need to filter results if there are no past results. */
+        if (!pastLintResults || !isLengthAtLeast(pastLintResults, 1)) {
+            return presentLintResults[0];
+        }
 
-            if (pastResults.length > 1) {
-                throw new Error(`Somehow there are multiple past lint results for '${filePath}'`);
-            }
+        if (pastLintResults.length > 1) {
+            throw new Error(
+                `Somehow there are multiple past lint results for '${changedFile.pastFilePath}'`,
+            );
+        }
 
-            return removeDuplicateMessages({past: pastResults[0], present: presentResults[0]});
-        },
-    );
+        return removeDuplicateMessages({
+            past: pastLintResults[0],
+            present: presentLintResults[0],
+        });
+    });
 
-    return Object.values(filtered);
+    return filtered;
 }
 
 function groupResultsByFile(
