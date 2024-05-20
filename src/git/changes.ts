@@ -92,8 +92,18 @@ function parseDiffLine({
     }
 }
 
+/**
+ * From the docs here:
+ * https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---diff-filterACDMRTUXB82308203
+ */
 enum NameStatus {
+    Added = 'a',
+    Copied = 'c',
     Deleted = 'd',
     Modified = 'm',
     Renamed = 'r',
+    TypeChanged = 't',
+    TypeUnmerged = 'u',
+    TypeUnknown = 'x',
+    PairingBroken = 'b',
 }
