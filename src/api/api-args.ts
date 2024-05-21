@@ -49,7 +49,7 @@ export const apiArgsShape = defineShape({
 });
 
 /**
- * The args expected by this package's API.
+ * The args expected by this package's API. See {@link apiArgsShape} for the list of properties.
  *
  * @category API
  */

@@ -1,12 +1,12 @@
 import {
     assertLengthAtLeast,
+    filterMap,
     groupArrayBy,
     isLengthAtLeast,
     isTruthy,
     mapObjectValues,
 } from '@augment-vir/common';
 import type {ESLint, Linter} from 'eslint';
-import {assertDefined} from 'run-time-assertions';
 import {ChangedFile} from '../git/changes';
 
 /**
@@ -32,37 +32,51 @@ export function filterLintResults(
         groupResultsByFile(lintResults),
     );
 
-    const filtered: ESLint.LintResult[] = changedFiles.map((changedFile): ESLint.LintResult => {
-        const presentLintResults = byFile.present[changedFile.presentFilePath];
-        const pastLintResults = changedFile.pastFilePath
-            ? byFile.past[changedFile.pastFilePath]
-            : undefined;
+    const filtered: ESLint.LintResult[] = filterMap(
+        changedFiles,
+        (changedFile): ESLint.LintResult | undefined => {
+            const presentLintResults = byFile.present[changedFile.presentFilePath];
+            const pastLintResults = changedFile.pastFilePath
+                ? byFile.past[changedFile.pastFilePath]
+                : undefined;
 
-        const assertionFailureMessage = `Somehow there are no present lint results for '${changedFile.presentFilePath}'`;
-        assertDefined(presentLintResults, assertionFailureMessage);
-        assertLengthAtLeast(presentLintResults, 1, assertionFailureMessage);
-        if (presentLintResults.length > 1) {
-            throw new Error(
-                `Somehow there are multiple present lint results for '${changedFile.presentFilePath}'`,
+            /**
+             * Not being able to find any lint results here would indicate that the file was ignored
+             * by ESLint.
+             */
+            if (!presentLintResults) {
+                return undefined;
+            }
+
+            assertLengthAtLeast(
+                presentLintResults,
+                1,
+                `Somehow there are no present lint results for '${changedFile.presentFilePath}'`,
             );
-        }
+            if (presentLintResults.length > 1) {
+                throw new Error(
+                    `Somehow there are multiple present lint results for '${changedFile.presentFilePath}'`,
+                );
+            }
 
-        /** No need to filter results if there are no past results. */
-        if (!pastLintResults || !isLengthAtLeast(pastLintResults, 1)) {
-            return presentLintResults[0];
-        }
+            /** No need to filter results if there are no past results. */
+            if (!pastLintResults || !isLengthAtLeast(pastLintResults, 1)) {
+                return presentLintResults[0];
+            }
 
-        if (pastLintResults.length > 1) {
-            throw new Error(
-                `Somehow there are multiple past lint results for '${changedFile.pastFilePath}'`,
-            );
-        }
+            if (pastLintResults.length > 1) {
+                throw new Error(
+                    `Somehow there are multiple past lint results for '${changedFile.pastFilePath}'`,
+                );
+            }
 
-        return removeDuplicateMessages({
-            past: pastLintResults[0],
-            present: presentLintResults[0],
-        });
-    });
+            return removeDuplicateMessages({
+                past: pastLintResults[0],
+                present: presentLintResults[0],
+            });
+        },
+        isTruthy,
+    );
 
     return filtered;
 }

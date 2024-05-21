@@ -5,7 +5,7 @@ import simpleGit from 'simple-git';
 import {filterLintResults} from '../eslint/filter-lint-results.js';
 import {lintFiles} from '../eslint/lint-files.js';
 import {listChangedFiles} from '../git/changes.js';
-import {findBaseRef} from '../git/find-base-ref.js';
+import {findBaseBranch, getMergeBase} from '../git/find-base-ref';
 import {listCommits} from '../git/list-commits.js';
 import {ApiArgs, apiArgsShape} from './api-args.js';
 import {setupForPastLinting} from './setup-past-linting.js';
@@ -25,12 +25,18 @@ export async function lintChanges(
     const cwd = apiArgs.cwd || apiArgsShape.defaultValue.cwd;
     const git = simpleGit(cwd);
 
+    const rawBaseRef = apiArgs.baseRef || (await findBaseBranch(git, gitRef));
+
     const fullArgs: Readonly<ApiArgs> = {
         ...apiArgsShape.defaultValue,
         ...apiArgs,
-        baseRef: apiArgs.baseRef || (await findBaseRef(git, gitRef)),
+        baseRef: await getMergeBase(git, {startingRef: gitRef, baseRef: rawBaseRef}),
         cwd,
     };
+
+    if (apiArgs.baseRef) {
+        await git.fetch('origin', fullArgs.baseRef);
+    }
 
     if (!fullArgs.silent) {
         /**
