@@ -7,7 +7,7 @@ import {
     mapObjectValues,
 } from '@augment-vir/common';
 import type {ESLint, Linter} from 'eslint';
-import {ChangedFile} from '../git/changes';
+import {ChangedFile} from '../git/changes.js';
 
 /**
  * An object with both past and present results of arbitrary type `T`.

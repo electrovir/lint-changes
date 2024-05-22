@@ -5,7 +5,7 @@ import simpleGit from 'simple-git';
 import {filterLintResults} from '../eslint/filter-lint-results.js';
 import {lintFiles} from '../eslint/lint-files.js';
 import {listChangedFiles} from '../git/changes.js';
-import {findBaseBranch, getMergeBase} from '../git/find-base-ref';
+import {findBaseBranch, getMergeBase} from '../git/find-base-ref.js';
 import {listCommits} from '../git/list-commits.js';
 import {ApiArgs, apiArgsShape} from './api-args.js';
 import {setupForPastLinting} from './setup-past-linting.js';
