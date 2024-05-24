@@ -5,6 +5,7 @@ import simpleGit from 'simple-git';
 import {filterLintResults} from '../eslint/filter-lint-results.js';
 import {lintFiles} from '../eslint/lint-files.js';
 import {listChangedFiles} from '../git/changes.js';
+import {getCurrentBranch} from '../git/current-branch';
 import {findBaseBranch, getMergeBase} from '../git/find-base-ref.js';
 import {listCommits} from '../git/list-commits.js';
 import {ApiArgs, apiArgsShape} from './api-args.js';
@@ -58,6 +59,7 @@ export async function lintChanges(
     const changedFiles = await listChangedFiles(git, {ref: gitRef, relativeTo: fullArgs.baseRef});
 
     if (fullArgs.checkoutBaseRef) {
+        const currentBranch = await getCurrentBranch(git);
         try {
             const presentResults = await lintFiles({
                 eslintArgString,
@@ -86,7 +88,7 @@ export async function lintChanges(
         } finally {
             await git.raw([
                 'checkout',
-                '-',
+                currentBranch,
             ]);
         }
     } else {
