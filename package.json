@@ -55,8 +55,7 @@
         "object-shape-tester": "^2.3.2",
         "run-time-assertions": "^1.5.1",
         "simple-git": "^3.24.0",
-        "tsx": "^4.10.5",
-        "virmator": "^11.5.2"
+        "tsx": "^4.10.5"
     },
     "devDependencies": {
         "@augment-vir/chai": "^28.0.2",
@@ -93,6 +92,9 @@
         "typedoc": "^0.25.13",
         "typescript": "^5.3.3",
         "typescript-eslint": "^8.0.0-alpha.14"
+    },
+    "peerDependencies": {
+        "virmator": "*"
     },
     "overrides": {
         "eslint": "^9.3.0"
