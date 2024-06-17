@@ -1,6 +1,6 @@
 {
     "name": "lint-changes",
-    "version": "0.0.9",
+    "version": "1.0.0",
     "description": "A CLI, API, and GitHub Action for running ESLint only on changed files.",
     "keywords": [
         "api",
