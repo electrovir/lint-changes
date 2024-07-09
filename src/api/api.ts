@@ -84,7 +84,11 @@ export async function lintChanges(
                 cwd,
             });
 
-            return filterLintResults({past: pastResults, present: presentResults}, changedFiles);
+            return filterLintResults(
+                {past: pastResults, present: presentResults},
+                changedFiles,
+                fullArgs.debug,
+            );
         } finally {
             await git.raw([
                 'checkout',

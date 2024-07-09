@@ -31,6 +31,12 @@ export const apiArgsShape = defineShape({
      * @default ''
      */
     baseRef: '',
+    /**
+     * Set to `true` for extra logging. Set to `false` to turn off the extra logging.
+     *
+     * @default true
+     */
+    debug: true,
     /** Remove all non-error logging. */
     silent: false,
     /**

@@ -6,7 +6,9 @@ import {
     isTruthy,
     mapObjectValues,
 } from '@augment-vir/common';
+import {logIf} from '@augment-vir/node-js';
 import type {ESLint, Linter} from 'eslint';
+import {basename} from 'path';
 import {ChangedFile} from '../git/changes.js';
 
 /**
@@ -27,6 +29,7 @@ export type TimeComparison<T> = {
 export function filterLintResults(
     originalResults: Readonly<TimeComparison<ReadonlyArray<Readonly<ESLint.LintResult>>>>,
     changedFiles: ReadonlyArray<Readonly<ChangedFile>>,
+    debug: boolean,
 ): ESLint.LintResult[] {
     const byFile = mapObjectValues(originalResults, (key, lintResults) =>
         groupResultsByFile(lintResults),
@@ -35,6 +38,7 @@ export function filterLintResults(
     const filtered: ESLint.LintResult[] = filterMap(
         changedFiles,
         (changedFile): ESLint.LintResult | undefined => {
+            const baseFileName = basename(changedFile.presentFilePath);
             const presentLintResults = byFile.present[changedFile.presentFilePath];
             const pastLintResults = changedFile.pastFilePath
                 ? byFile.past[changedFile.pastFilePath]
@@ -45,6 +49,7 @@ export function filterLintResults(
              * by ESLint.
              */
             if (!presentLintResults) {
+                logIf.info(debug, `No present lint results for '${baseFileName}'.`);
                 return undefined;
             }
 
@@ -61,6 +66,7 @@ export function filterLintResults(
 
             /** No need to filter results if there are no past results. */
             if (!pastLintResults || !isLengthAtLeast(pastLintResults, 1)) {
+                logIf.info(debug, `No past lint results for '${baseFileName}'.`);
                 return presentLintResults[0];
             }
 
@@ -70,10 +76,15 @@ export function filterLintResults(
                 );
             }
 
-            return removeDuplicateMessages({
-                past: pastLintResults[0],
-                present: presentLintResults[0],
-            });
+            logIf.info(debug, `Removing duplicate messages for '${baseFileName}'.`);
+
+            return removeDuplicateMessages(
+                {
+                    past: pastLintResults[0],
+                    present: presentLintResults[0],
+                },
+                debug,
+            );
         },
         isTruthy,
     );
@@ -89,17 +100,29 @@ function groupResultsByFile(
 
 function removeDuplicateMessages(
     results: TimeComparison<Readonly<ESLint.LintResult>>,
+    debug: boolean,
 ): ESLint.LintResult {
     const messages: TimeComparison<{[messageKey in string]?: Linter.LintMessage[]}> =
         mapObjectValues(results, (key, value) => groupMessages(value.messages));
+    if (debug) {
+        const messageCounts: TimeComparison<Record<string, number>> = mapObjectValues(
+            messages,
+            (time, timeMessages) => {
+                return mapObjectValues(timeMessages, (messageKey, messages) => {
+                    return messages?.length || 0;
+                });
+            },
+        );
+        console.info(JSON.stringify(messageCounts, null, 4));
+    }
 
     const filteredKeyedMessages = mapObjectValues(
         messages.present,
-        (messageId, presentMessages) => {
+        (messageKey, presentMessages) => {
             if (!presentMessages) {
                 return undefined;
             }
-            const pastMessages = messages.past[messageId];
+            const pastMessages = messages.past[messageKey];
             if (!pastMessages || !pastMessages.length) {
                 return presentMessages;
             }
