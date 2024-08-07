@@ -25,6 +25,14 @@ export async function lintFiles({
         });
     }
 
+    /**
+     * Return early otherwise we'll pass no file paths to ESLint and it will try to lint
+     * _everything_.
+     */
+    if (!filePaths.length) {
+        return [];
+    }
+
     /** Use the ESLint CLI instead of its API because the API has major performance issues. */
     const commandOutput = await runShellCommand(
         `eslint --no-warn-ignored --format json ${eslintArgString} ${filePaths.map((filePath) => `'${filePath}'`).join(' ')}`,

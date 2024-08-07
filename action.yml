@@ -7,6 +7,10 @@ inputs:
     eslintArgs:
         description: "A single string of space-separated args that will be passed to ESLint's CLI. See https://eslint.org/docs/latest/use/command-line-interface for its docs."
         required: false
+    debug:
+        description: 'Set to true to enable debug logging.'
+        required: false
+        default: 'false'
     pastSetupCommand:
         description: "A shell command to run in order to setup your past repo for linting. Usually all you need here is the default of 'npm ci'."
         default: 'npm ci'

@@ -9,7 +9,7 @@ async function runGithubAction() {
      */
     await wait(2_000);
 
-    const {eslintArgString, baseRef, repoDir, pastSetupCommand} = extractActionEnv();
+    const {eslintArgString, baseRef, repoDir, pastSetupCommand, debug} = extractActionEnv();
 
     await runCli({
         apiArgs: {
@@ -18,6 +18,7 @@ async function runGithubAction() {
             cwd: repoDir,
             pastSetupCommand,
             silent: false,
+            debug,
         },
         eslintArgString,
     });

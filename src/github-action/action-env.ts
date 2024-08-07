@@ -7,6 +7,7 @@ export function extractActionEnv(): {
     repoDir: string;
     pastSetupCommand: string;
     baseRef: string;
+    debug: boolean;
 } {
     const repoDir = process.env.GITHUB_WORKSPACE;
     if (!repoDir || !existsSync(repoDir)) {
@@ -17,11 +18,13 @@ export function extractActionEnv(): {
 
     const pastSetupCommand: string = getInput('token', {trimWhitespace: true}) || 'npm ci';
     const eslintArgString: string = getInput('eslintArgs', {trimWhitespace: true});
+    const debug: boolean = getInput('debug', {trimWhitespace: true}) === 'true' || false;
 
     return {
         repoDir,
         pastSetupCommand,
         eslintArgString,
+        debug,
         baseRef: baseBranch ? `origin/${baseBranch}` : baseBranch,
     };
 }
